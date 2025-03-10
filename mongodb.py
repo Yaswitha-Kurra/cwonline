@@ -3,7 +3,7 @@ from bson import ObjectId
 from datetime import datetime
 
 # MongoDB connection setup
-client = MongoClient("mongodb+srv://yaswitha:Microtek123%40@cluster0.m06cm.mongodb.net/")  # Update with your MongoDB URI
+client = MongoClient("mongodb://localhost:27017/")  # Update with your MongoDB URI
 db = client["test"]  # Your database name
 courses_collection = db["courses"]  # Your courses collection
 
