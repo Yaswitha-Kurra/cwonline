@@ -6,7 +6,12 @@ app = Flask(__name__)  # Initialize the Flask application
 # Route for the homepage (index page)
 @app.route('/')
 def home():
-    return render_template('index.html')  # This will render index.html when Home is clicked
+    return render_template('courses.html', courses=get_courses())  # This will render index.html when Home is clicked
+
+
+@app.route('/home')
+def index_page():
+    return render_template('index.html')
 
 
 @app.route('/courses', methods=['GET'])
