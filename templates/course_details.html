@@ -44,6 +44,8 @@
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="{{ url_for('index_page') }}" class="nav-item nav-link">Home</a>
                 <a href="{{ url_for('courses') }}" class="nav-item nav-link active">Courses</a>
+                <a href="{{ url_for('expired_courses') }}" class="nav-item nav-link">Expired Courses</a>
+
                 <!--<div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -65,6 +67,11 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="course-detail">
+                        {% if expired %}
+                            <div class="alert alert-danger text-center fw-bold mb-4">
+                                ⚠️ This course is no longer free. The coupon has expired.
+                            </div>
+                        {% endif %}
                         <img class="img-fluid" src="{{ course['Image URL'] }}" alt="Course Image" style="margin-bottom: 20px;">
                         <h2>{{ course['Title'] }}</h2>
                         <p><strong>Category:</strong> {{ course['Category'] }}</p>

@@ -20,11 +20,15 @@ def courses():
     return render_template('courses.html', courses=all_courses)
 
 # Route to display details of a specific course
-@app.route('/course/<course_id>', methods=['GET'])
+@app.route('/course/<course_id>')
 def course_details(course_id):
-    # Fetch the course details by course_id
-    course = get_course_by_id(course_id)  # Assuming get_course_by_id is a function in mongodb.py
-    return render_template('course_details.html', course=course)
+    course = get_course_by_id(course_id)
+    if course is None:
+        return render_template('courses.html')
+
+    expired = course.get('expired', False)
+    return render_template('course_details.html', course=course, expired=expired)
+
 
 # Route for the API to fetch courses in JSON format (for possible AJAX requests)
 @app.route('/api/courses')
@@ -32,6 +36,13 @@ def api_courses():
     # Fetch courses and return them as JSON
     courses = get_courses()
     return jsonify(courses)
+
+@app.route('/expired', methods=['GET'])
+def expired_courses():
+    from mongodb import get_expired_courses
+    courses = get_expired_courses()
+    return render_template('expired_courses.html', courses=courses)
+
 
 # Start the Flask app
 if __name__ == '__main__':

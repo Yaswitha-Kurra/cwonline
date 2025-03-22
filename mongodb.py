@@ -8,23 +8,42 @@ db = client["test"]  # Your database name
 courses_collection = db["courses"]  # Your courses collection
 
 def get_courses():
-    # Fetch all courses from the MongoDB database
-    courses = list(courses_collection.find({}))  # Converts the cursor to a list of courses
+    # Fetch only non-expired courses
+    courses = list(courses_collection.find({
+        "$or": [
+            {"expired": {"$exists": False}},
+            {"expired": False}
+        ]
+    }).sort("Timestamp", -1))
 
-    # Convert date strings to a proper date format
     for course in courses:
         if 'Publication Date' in course:
-            course['Publication Date'] = datetime.strptime(course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f").strftime("%Y-%m-%d %H:%M:%S")
+            course['Publication Date'] = datetime.strptime(
+                course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f"
+            ).strftime("%Y-%m-%d %H:%M:%S")
     
     return courses
 
 
 def get_course_by_id(course_id):
-    # Fetch a single course by its ObjectId
     course = courses_collection.find_one({"_id": ObjectId(course_id)})
 
-    # Convert the publication date if it exists
-    if 'Publication Date' in course:
-        course['Publication Date'] = datetime.strptime(course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f").strftime("%Y-%m-%d %H:%M:%S")
-    
+    if course and 'Publication Date' in course:
+        course['Publication Date'] = datetime.strptime(
+            course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f"
+        ).strftime("%Y-%m-%d %H:%M:%S")
+
     return course
+
+
+
+def get_expired_courses():
+    courses = list(courses_collection.find({"expired": True}).sort("Timestamp", -1))
+
+    for course in courses:
+        if 'Publication Date' in course:
+            course['Publication Date'] = datetime.strptime(
+                course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f"
+            ).strftime("%Y-%m-%d %H:%M:%S")
+    
+    return courses
