@@ -1,12 +1,20 @@
-from flask import Flask, render_template, jsonify
-from mongodb import get_courses, get_course_by_id  # Import functions to get courses from MongoDB
+from flask import Flask, render_template, jsonify, request
+from mongodb import get_courses, get_course_by_id, get_expired_courses  # Import functions to get courses from MongoDB
 
 app = Flask(__name__)  # Initialize the Flask application
 
 # Route for the homepage (index page)
 @app.route('/')
 def home():
-    return render_template('courses.html', courses=get_courses())  # This will render index.html when Home is clicked
+    page = request.args.get('page', default=1, type=int)
+    per_page = 9
+    all_courses, total_courses = get_courses(page, per_page)
+    total_pages = (total_courses + per_page - 1) // per_page
+
+    return render_template('courses.html',
+                           courses=all_courses,
+                           page=page,
+                           total_pages=total_pages)
 
 
 @app.route('/home')
@@ -16,9 +24,14 @@ def index_page():
 
 @app.route('/courses', methods=['GET'])
 def courses():
-    all_courses = get_courses()
-    return render_template('courses.html', courses=all_courses)
+    page = request.args.get('page', default=1, type=int)
+    per_page = 9
+    all_courses, total_courses = get_courses(page, per_page)
 
+    total_pages = (total_courses + per_page - 1) // per_page  # ceiling division
+
+    return render_template('courses.html', courses=all_courses,page=page,total_pages=total_pages)
+    
 # Route to display details of a specific course
 @app.route('/course/<course_id>')
 def course_details(course_id):
@@ -37,11 +50,18 @@ def api_courses():
     courses = get_courses()
     return jsonify(courses)
 
-@app.route('/expired', methods=['GET'])
+@app.route('/expired')
 def expired_courses():
-    from mongodb import get_expired_courses
-    courses = get_expired_courses()
-    return render_template('expired_courses.html', courses=courses)
+    page = request.args.get('page', default=1, type=int)
+    per_page = 9
+    courses, total_courses = get_expired_courses(page, per_page)
+    total_pages = (total_courses + per_page - 1) // per_page
+
+    return render_template('expired_courses.html',
+                           courses=courses,
+                           page=page,
+                           total_pages=total_pages)
+
 
 
 # Start the Flask app

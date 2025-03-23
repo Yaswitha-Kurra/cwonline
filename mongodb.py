@@ -7,14 +7,13 @@ client = MongoClient("mongodb://localhost:27017/")  # Update with your MongoDB U
 db = client["test"]  # Your database name
 courses_collection = db["courses"]  # Your courses collection
 
-def get_courses():
-    # Fetch only non-expired courses
-    courses = list(courses_collection.find({
-        "$or": [
-            {"expired": {"$exists": False}},
-            {"expired": False}
-        ]
-    }).sort("Timestamp", -1))
+def get_courses(page=1, per_page=9):
+    skip = (page - 1) * per_page
+    cursor = courses_collection.find({
+        "$or": [{"expired": {"$exists": False}}, {"expired": False}]
+    }).sort("Timestamp", -1).skip(skip).limit(per_page)
+
+    courses = list(cursor)
 
     for course in courses:
         if 'Publication Date' in course:
@@ -22,7 +21,12 @@ def get_courses():
                 course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f"
             ).strftime("%Y-%m-%d %H:%M:%S")
     
-    return courses
+    total = courses_collection.count_documents({
+        "$or": [{"expired": {"$exists": False}}, {"expired": False}]
+    })
+
+    return courses, total
+
 
 
 def get_course_by_id(course_id):
@@ -37,13 +41,18 @@ def get_course_by_id(course_id):
 
 
 
-def get_expired_courses():
-    courses = list(courses_collection.find({"expired": True}).sort("Timestamp", -1))
+def get_expired_courses(page=1, per_page=12):
+    skip = (page - 1) * per_page
+    cursor = courses_collection.find({"expired": True}).sort("Timestamp", -1).skip(skip).limit(per_page)
+    courses = list(cursor)
 
     for course in courses:
         if 'Publication Date' in course:
             course['Publication Date'] = datetime.strptime(
                 course['Publication Date'], "%a, %d %b %Y %H:%M:%S +%f"
             ).strftime("%Y-%m-%d %H:%M:%S")
-    
-    return courses
+
+    total = courses_collection.count_documents({"expired": True})
+
+    return courses, total
+
