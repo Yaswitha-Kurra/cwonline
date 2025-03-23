@@ -117,7 +117,7 @@
                     <a href="{{ url_for('course_details', course_id=course['_id']) }}" class="text-decoration-none text-dark">
                         <div class="course-item bg-light hover-shadow" style="cursor: pointer;">
                             <div class="position-relative overflow-hidden">
-                                <img class="img-fluid" src="{{ course['Image URL'] }}" alt="Course Image">
+                                <img src="{{ url_for('static', filename=course['Image URL']) }}" loading="lazy" class="img-fluid" alt="Course Image">
                                 <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
                                     <span class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Read More</span>
                                 </div>

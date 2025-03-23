@@ -72,7 +72,7 @@
                                 ⚠️ This course is no longer free. The coupon has expired.
                             </div>
                         {% endif %}
-                        <img class="img-fluid" src="{{ course['Image URL'] }}" alt="Course Image" style="margin-bottom: 20px;">
+                        <img class="img-fluid" src="{{ url_for('static', filename=course['Image URL']) }}" alt="Course Image" style="margin-bottom: 20px;">
                         <h2>{{ course['Title'] }}</h2>
                         <p><strong>Category:</strong> {{ course['Category'] }}</p>
                         <p><strong>Publication Date:</strong> {{ course['Publication Date'] }}</p>
