@@ -22,15 +22,22 @@ def index_page():
     return render_template('index.html')
 
 
+
 @app.route('/courses', methods=['GET'])
 def courses():
     page = request.args.get('page', default=1, type=int)
+    search = request.args.get('search', default='', type=str)
     per_page = 9
-    all_courses, total_courses = get_courses(page, per_page)
 
-    total_pages = (total_courses + per_page - 1) // per_page  # ceiling division
+    all_courses, total_courses = get_courses(page, per_page, search)
+    total_pages = (total_courses + per_page - 1) // per_page
 
-    return render_template('courses.html', courses=all_courses,page=page,total_pages=total_pages)
+    return render_template('courses.html',
+                           courses=all_courses,
+                           page=page,
+                           total_pages=total_pages,
+                           search=search)
+
     
 # Route to display details of a specific course
 @app.route('/course/<course_id>')
