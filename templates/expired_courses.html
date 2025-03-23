@@ -77,7 +77,7 @@
                         <a href="{{ url_for('course_details', course_id=course['_id']) }}" class="text-decoration-none text-dark">
                             <div class="course-item bg-light hover-shadow">
                                 <div class="position-relative overflow-hidden">
-                                    <img class="img-fluid" src="{{ url_for('static', filename=course['Image URL']) }}" alt="Course Image">
+                                    <img class="img-fluid" loading="lazy" src="{{ url_for('static', filename=course['Image URL']) }}" alt="Course Image">
                                 </div>
                                 <div class="text-center p-4">
                                     <h5 class="text-danger">{{ course['Title'] }}</h5>
