@@ -17,7 +17,7 @@ def get_courses(page=1, per_page=12, search=None):
     if search:
         query["$and"] = [{
             "$or": [
-                {"Title": {"$regex": search, "$options": "i"}},
+                {"Title": {"$regex": r"\b" + search, "$options": "i"}},
                 {"Category": {"$regex": search, "$options": "i"}}
             ]
         }]

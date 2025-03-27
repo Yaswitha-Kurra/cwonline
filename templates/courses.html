@@ -162,7 +162,7 @@
                         <!-- Previous -->
                         {% if page > 1 %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('courses', page=page + 1, search=search) }}">Next</a>
+                            <a class="page-link" href="{{ url_for('courses', page=page - 1, search=search) }}">Previous</a>
                         </li>
                         {% else %}
                         <li class="page-item disabled"><span class="page-link">Previous</span></li>
@@ -170,7 +170,7 @@
                     
                         <!-- First Page -->
                         <li class="page-item {% if page == 1 %}active{% endif %}">
-                            <a class="page-link" href="{{ url_for('courses', page=1) }}">1</a>
+                            <a class="page-link" href="{{ url_for('courses', page=1, search=search) }}">1</a>
                         </li>
                     
                         <!-- Left Ellipsis -->
@@ -182,7 +182,7 @@
                         {% for p in range(page - 1, page + 2) %}
                             {% if 1 < p < total_pages %}
                             <li class="page-item {% if page == p %}active{% endif %}">
-                                <a class="page-link" href="{{ url_for('courses', page=p) }}">{{ p }}</a>
+                                <a class="page-link" href="{{ url_for('courses', page=p, search=search) }}">{{ p }}</a>
                             </li>
                             {% endif %}
                         {% endfor %}
@@ -195,7 +195,7 @@
                         <!-- Last Page -->
                         {% if total_pages > 1 %}
                         <li class="page-item {% if page == total_pages %}active{% endif %}">
-                            <a class="page-link" href="{{ url_for('courses', page=total_pages) }}">{{ total_pages }}</a>
+                            <a class="page-link" href="{{ url_for('courses', page=total_pages, search=search) }}">{{ total_pages }}</a>
                         </li>
                         {% endif %}
                     
